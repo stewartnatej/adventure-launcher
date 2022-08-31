@@ -1,4 +1,4 @@
-//get the party started
+//get the party started!
 async function party() {
 	// get tokens
 	let response = await fetch('http://localhost:8000/tokens.json');
