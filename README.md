@@ -28,7 +28,7 @@
 - if a metric is not being used for display, don't fetch it until its popup is activated
 - host somewhere to make accessible to the global web
 
-## 🤖 tech stack 🤖
+## 🤖 tech stack
 - [mapbox](https://www.mapbox.com/)
 - [openweather api](https://openweathermap.org)
 - initialize local server
