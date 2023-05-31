@@ -39,7 +39,7 @@ async function party() {
 }
 
 function addHome(map, home) {
-	// create a HTML element for each feature
+	// create an HTML element for the starting location
     const h = document.createElement("div");
     h.className = "home";
 
@@ -74,7 +74,7 @@ async function addFeatures(map, feature, home, token) {
 	// get weather
 	
 	
-	// create a HTML element for each feature
+	// create an HTML element for each feature
     const el = document.createElement("div");
     el.className = groupTimes(time);
     

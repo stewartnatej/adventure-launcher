@@ -3,17 +3,6 @@
     {
       "type": "Feature",
       "properties": {
-        "title": "Walla Walla",
-        "description": "A great place to be"
-      },
-      "geometry": {
-        "coordinates": [-118.34302, 46.06458],
-        "type": "Point"
-      }
-    },
-    {
-      "type": "Feature",
-      "properties": {
         "title": "Grouse Mountain",
         "description": "5 miles"
       },
