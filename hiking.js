@@ -36,7 +36,7 @@ async function party() {
 	let home = [-118.343, 46.0645]
 	addHome(map, home)
 	getFeatures(map, home, mapboxgl.accessToken);
-};
+}
 
 function addHome(map, home) {
 	// create a HTML element for each feature
@@ -51,7 +51,7 @@ function addHome(map, home) {
                 .setHTML(`<h3>Launch Pad</h3>`)
         )
         .addTo(map);
-};
+}
 
 async function getFeatures(map, home, token) {
 	let response = await fetch('http://localhost:8000/hiking.geojson');
@@ -59,7 +59,7 @@ async function getFeatures(map, home, token) {
 	for (const feature of data.features) {
 		addFeatures(map, feature, home, token)
     }
-};
+}
 
 async function addFeatures(map, feature, home, token) {
 	// get drive time
@@ -88,11 +88,11 @@ async function addFeatures(map, feature, home, token) {
                 <p>${feature.properties.description}</p>`)
         )
         .addTo(map);
-};
+}
 
 function groupTimes(time) {
 	if (time < 2) return 'close';
 	else return 'far';
-};
+}
 
 party()

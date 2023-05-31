@@ -31,8 +31,4 @@
 ## 🤖 tech stack
 - [mapbox](https://www.mapbox.com/)
 - [openweather api](https://openweathermap.org)
-- initialize local server
-```
-cd js
-python3 -m http.server 8000 --bind 127.0.0.1
-```
+- simple python web server - run `server.py`

@@ -14,11 +14,22 @@
     {
       "type": "Feature",
       "properties": {
-        "title": "College Place",
-        "description": "A place to be"
+        "title": "Grouse Mountain",
+        "description": "5 miles"
       },
       "geometry": {
-        "coordinates": [-118.37616, 46.04033],
+        "coordinates": [-118.1709, 45.7462],
+        "type": "Point"
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Peggy's Pond",
+        "description": "11 miles"
+      },
+      "geometry": {
+        "coordinates": [-121.0919, 47.5365],
         "type": "Point"
       }
     }],
