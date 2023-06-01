@@ -1,20 +1,21 @@
 //get the party started!
 async function party() {
-	// test the responses from openweather. eventually we'll add these to each feature
+	// test the responses from openweather. eventually we'll add these to each location
+	let loc = [-118.343, 46.0645];
 	// get weather
-	let weatherResponse = await fetch('/weather');
+	let weatherResponse = await fetch(`/weather?lat=${loc[1]}&long=${loc[0]}`);
 	let weatherData = await weatherResponse.json()
 	console.log(weatherData[0])
 	
 	// get pollution
-	let pollutionResponse = await fetch('/pollution');
+	let pollutionResponse = await fetch(`/pollution?lat=${loc[1]}&long=${loc[0]}`);
 	let pollutionData = await pollutionResponse.json()
 	console.log(pollutionData[0])
 	
 	// build the map
 	// after launch - https://docs.mapbox.com/help/troubleshooting/how-to-use-mapbox-securely/
-	let response = await fetch('/mapbox_token');
-	mapboxgl.accessToken = await response.json();
+	let tokenResponse = await fetch('/mapbox_token');
+	mapboxgl.accessToken = await tokenResponse.json();
 	const map = new mapboxgl.Map({
 		container: "map",
 		style: "mapbox://styles/mapbox/outdoors-v11",
@@ -69,7 +70,7 @@ async function addFeatures(map, feature, home, token) {
 	let directions = await dirApi.json();
 	let time = (directions.routes[0].duration / 3600).toFixed(1)
 	
-	// get weather
+	// process weather and pollution
 	
 	
 	// create an HTML element for each feature

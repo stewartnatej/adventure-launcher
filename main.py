@@ -46,16 +46,15 @@ async def mapbox_token():
 
 
 @app.get('/weather')
-async def weather():
+async def weather(lat, long):
     """
     get weather (3 hour steps for 5 days).
     condition codes - https://openweathermap.org/weather-conditions
     """
-    location = [-118.343, 46.0645]
     url = 'https://api.openweathermap.org/data/2.5/forecast'
     params = {
-        'lat': location[1],
-        'lon': location[0],
+        'lat': lat,
+        'lon': long,
         'units': 'imperial',
         'appid': tokens["openweather"]
     }
@@ -66,13 +65,12 @@ async def weather():
 
 
 @app.get('/pollution')
-async def pollution():
+async def pollution(lat, long):
     """get pollution (hourly for 5 days)"""
-    location = [-118.343, 46.0645]
     url = 'https://api.openweathermap.org/data/2.5/air_pollution/forecast'
     params = {
-        'lat': location[1],
-        'lon': location[0],
+        'lat': lat,
+        'lon': long,
         'appid': tokens["openweather"]
     }
     pollution_url = f'{url}?{urlencode(params)}'
