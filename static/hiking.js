@@ -1,7 +1,7 @@
 //get the party started!
 async function party() {
 	// get tokens
-	let response = await fetch('http://localhost:8000/tokens.json');
+	let response = await fetch('/static/tokens.json');
 	tokens = await response.json();
 	mapboxgl.accessToken = tokens.mapbox
 	weatherToken = tokens.openweather
@@ -54,7 +54,7 @@ function addHome(map, home) {
 }
 
 async function getFeatures(map, home, token) {
-	let response = await fetch('http://localhost:8000/hiking.geojson');
+	let response = await fetch('/static/hiking.geojson');
 	let data = await response.json();
 	for (const feature of data.features) {
 		addFeatures(map, feature, home, token)

@@ -6,7 +6,7 @@
 - smoke forecast
 
 ## ⭕ prerequisites
-- you must have your own tokens on openweather and mapbox gl js
+- you must have your own tokens on `openweather` and `mapbox gl js`
 
 ## 🤔 desired end state
 - hike popups: drive time, 5-day outlook for weather and smoke
@@ -31,4 +31,8 @@
 ## 🤖 tech stack
 - [mapbox](https://www.mapbox.com/)
 - [openweather api](https://openweathermap.org)
-- simple python web server - run `server.py`
+- [FastAPI](https://fastapi.tiangolo.com/) 
+
+## ▶ run it
+- run `server.py`
+- visit http://127.0.0.1:6738/
