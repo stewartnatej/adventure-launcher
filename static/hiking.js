@@ -1,41 +1,30 @@
 //get the party started!
 async function party() {
-	// get tokens
-	let response = await fetch('/static/tokens.json');
-	tokens = await response.json();
-	mapboxgl.accessToken = tokens.mapbox
-	weatherToken = tokens.openweather
+	// test the responses from openweather. eventually we'll add these to each feature
+	// get weather
+	let weatherResponse = await fetch('/weather');
+	let weatherData = await weatherResponse.json()
+	console.log(weatherData[0])
 	
-	// get weather (3 hour steps for 5 days)
-	// condition codes - https://openweathermap.org/weather-conditions
-	let test = [-118.343, 46.0645]
-	formatted = 'lat=' + test[1] + '&lon=' + test[0]
-	wUrl = 'https://api.openweathermap.org/data/2.5/forecast?'
-	wUrl += formatted + '&units=imperial&appid=' + weatherToken
-	let wApi = await fetch(wUrl);
-	let whether = await wApi.json();
-	console.log(wUrl)
-	console.log(whether.list[1])
-	
-	// get pollution (hourly for 5 days)
-	pUrl = 'https://api.openweathermap.org/data/2.5/air_pollution/forecast?'
-	pUrl += formatted + '&appid=' + weatherToken
-	let pApi = await fetch(pUrl);
-	let pollution = await pApi.json();
-	console.log(pUrl)
-	console.log(pollution.list[1])
+	// get pollution
+	let pollutionResponse = await fetch('/pollution');
+	let pollutionData = await pollutionResponse.json()
+	console.log(pollutionData[0])
 	
 	// build the map
+	// after launch - https://docs.mapbox.com/help/troubleshooting/how-to-use-mapbox-securely/
+	let response = await fetch('/mapbox_token');
+	mapboxgl.accessToken = await response.json();
 	const map = new mapboxgl.Map({
 		container: "map",
 		style: "mapbox://styles/mapbox/outdoors-v11",
 		center: [-119.73999, 46],
 		zoom: 5.5,
 	});
-	
+
 	let home = [-118.343, 46.0645]
 	addHome(map, home)
-	getFeatures(map, home, mapboxgl.accessToken);
+	await getFeatures(map, home, mapboxgl.accessToken);
 }
 
 function addHome(map, home) {
@@ -63,10 +52,19 @@ async function getFeatures(map, home, token) {
 
 async function addFeatures(map, feature, home, token) {
 	// get drive time
-	let dest = feature.geometry.coordinates
-	let dirUrl = 'https://api.mapbox.com/directions/v5/mapbox/driving/'
-	dirUrl += dest[0] + '%2C' + dest[1] + '%3B' + home[0] + '%2C' + home[1]
-	dirUrl += '?alternatives=false&geometries=geojson&overview=simplified&steps=false&access_token=' + token
+	let params = {
+  		alternatives: false,
+  		geometries: 'geojson',
+  		overview: 'simplified',
+  		steps: false,
+  		access_token: token
+	};
+	let dest = feature.geometry.coordinates;
+	let dirUrl = new URL('https://api.mapbox.com/directions/v5/mapbox/driving/');
+	dirUrl.pathname += `${dest[0]},${dest[1]};${home[0]},${home[1]}`;
+	for (let param in params) {
+  		dirUrl.searchParams.set(param, params[param]);
+	}
 	let dirApi = await fetch(dirUrl);
 	let directions = await dirApi.json();
 	let time = (directions.routes[0].duration / 3600).toFixed(1)
