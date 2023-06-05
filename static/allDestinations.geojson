@@ -1,0 +1,38 @@
+{
+	"features": [
+	    {
+			"type": "Feature",
+			"properties": {
+				"title": "Grouse Mountain",
+				"miles": 5
+			},
+			"geometry": {
+				"coordinates": [-118.1709, 45.7462],
+				"type": "Point"
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"title": "Peggy's Pond",
+				"miles": 11
+			},
+			"geometry": {
+				"coordinates": [-121.0919, 47.5365],
+				"type": "Point"
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"title": "Steens Mountain",
+				"miles": 21
+			},
+			"geometry": {
+				"coordinates": [-118.7283, 42.6563],
+				"type": "Point"
+			}
+		}
+	],
+	"type": "FeatureCollection"
+}
