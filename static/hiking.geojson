@@ -4,7 +4,7 @@
       "type": "Feature",
       "properties": {
         "title": "Grouse Mountain",
-        "description": "5 miles"
+        "miles": 5
       },
       "geometry": {
         "coordinates": [-118.1709, 45.7462],
@@ -15,7 +15,7 @@
       "type": "Feature",
       "properties": {
         "title": "Peggy's Pond",
-        "description": "11 miles"
+        "miles": 11
       },
       "geometry": {
         "coordinates": [-121.0919, 47.5365],

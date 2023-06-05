@@ -1,22 +1,10 @@
-//get the party started!
 async function party() {
-	// test the responses from openweather. eventually we'll add these to each location
-	let loc = [-118.343, 46.0645]
-	// get weather
-	let weatherResponse = await fetch(`/weather?lat=${loc[1]}&long=${loc[0]}`)
-	let weatherData = await weatherResponse.json()
-	console.log(weatherData[0])
-	
-	// get pollution
-	let pollutionResponse = await fetch(`/pollution?lat=${loc[1]}&long=${loc[0]}`)
-	let pollutionData = await pollutionResponse.json()
-	console.log(pollutionData[0])
-	
-	// build the map
-	// after launch - https://docs.mapbox.com/help/troubleshooting/how-to-use-mapbox-securely/
+	// get mapbox token - https://docs.mapbox.com/help/troubleshooting/how-to-use-mapbox-securely/
 	let tokenResponse = await fetch('/mapbox_token')
 	mapboxgl.accessToken = await tokenResponse.json()
-	const map = new mapboxgl.Map({
+
+	// build the map
+	let map = new mapboxgl.Map({
 		container: "map",
 		style: "mapbox://styles/mapbox/outdoors-v11",
 		center: [-119.73999, 46],
@@ -28,30 +16,54 @@ async function party() {
 	await getFeatures(map, home, mapboxgl.accessToken)
 }
 
+
 function addHome(map, home) {
 	// create an HTML element for the starting location
-    const h = document.createElement("div")
-    h.className = "home"
+	let h = document.createElement("div")
+	h.className = "home"
 
-    // make a marker and add it to the map
-    new mapboxgl.Marker(h)
-        .setLngLat(home)
-        .setPopup(
-            new mapboxgl.Popup({ offset: 25 }) // add popups
-                .setHTML(`<h3>Launch Pad</h3>`)
-        )
-        .addTo(map)
+	// make a marker and add it to the map
+	let popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+		`<h3>Launch Pad</h3>`
+	)
+	new mapboxgl.Marker(h)
+		.setLngLat(home)
+		.setPopup(popup)
+		.addTo(map)
 }
+
+
+async function getWeather(loc) {
+	// find the station and api url for the forecast
+	let stationResponse = await fetch(`https://api.weather.gov/points/${loc[1]},${loc[0]}`)
+	let stationData = await stationResponse.json()
+
+	// get the forecast
+	let forecastUrl = stationData.properties.forecast
+	let weatherResponse = await fetch(forecastUrl)
+	let weatherData = await weatherResponse.json()
+
+	// get rid of days and properties we don't need
+	let nearFuture = weatherData.properties.periods.slice(0, 8)
+	let focusedData = nearFuture.map(  // un-nest and rename chance of precipitation
+		({detailedForecast, name, probabilityOfPrecipitation:  {value: percentPrecip}, temperature}
+		) => ({detailedForecast, name, percentPrecip, temperature})
+	)
+	return focusedData
+}
+
 
 async function getFeatures(map, home, token) {
 	let response = await fetch('/static/hiking.geojson')
 	let data = await response.json()
-	for (const feature of data.features) {
+	for (let feature of data.features) {
 		addFeatures(map, feature, home, token)
     }
 }
 
+
 async function addFeatures(map, feature, home, token) {
+	console.log(feature)
 	// get drive time
 	let params = {
   		alternatives: false,
@@ -70,28 +82,38 @@ async function addFeatures(map, feature, home, token) {
 	let directions = await dirApi.json()
 	let time = (directions.routes[0].duration / 3600).toFixed(1)
 	
-	// process weather and pollution
-	
+	// get weather
+	let weather = await getWeather(dest)
+
+	// get pollution
+	let pollutionResponse = await fetch(`/pollution?lat=${dest[1]}&long=${dest[0]}`)
+	let pollutionData = await pollutionResponse.json()
+	//console.log(pollutionData[0])
 	
 	// create an HTML element for each feature
-    const el = document.createElement("div")
+    let el = document.createElement("div")
     el.className = groupTimes(time)
     
     // make a marker and add it to the map
+	let popup = new mapboxgl.Popup({ offset: 25 }).setHTML(
+		`<h3>${feature.properties.title}</h3>
+		<p>Drive time: ${time} hours</p>
+		<p>${feature.properties.miles} mile hike</p>
+		<p>${weather[0].detailedForecast}</p>
+		<p>aqi: ${pollutionData[0].main.aqi}</p>`
+	)
     new mapboxgl.Marker(el)
         .setLngLat(dest)
-        .setPopup(
-            new mapboxgl.Popup({ offset: 25 }) // add popups
-                .setHTML(`<h3>${feature.properties.title}</h3>
-                <p>${time + ' hours'}</p>
-                <p>${feature.properties.description}</p>`)
-        )
+        .setPopup(popup)
         .addTo(map)
 }
+
 
 function groupTimes(time) {
 	if (time < 2) return 'close'
 	else return 'far'
 }
 
+
+//get the party started!
 party()
