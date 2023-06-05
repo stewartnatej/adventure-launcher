@@ -36,3 +36,4 @@
 ## ▶ run it
 - run `server.py`
 - visit http://127.0.0.1:6738/
+  - to change the starting location - http://127.0.0.1:6738/?long=-120.9392&lat=47.1954

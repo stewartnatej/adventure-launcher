@@ -11,11 +11,25 @@ async function party() {
 		zoom: 5.5,
 	})
 
-	let home = [-118.343, 46.0645]
+	let home = getHome()
 	addHome(map, home)
 	await getFeatures(map, home, mapboxgl.accessToken)
 }
 
+
+function getHome() {
+	// parse the starting location from the url
+	let url = new URL(window.location.href)
+	let queryParams = url.searchParams
+	let long = queryParams.get("long") ?? 0
+	let lat = queryParams.get("lat") ?? 0
+	if (long === 0 || lat === 0) {
+		// default if the url doesn't contain lat and long (but they could still be incorrect)
+		return [-118.343, 46.0645]
+	} else {
+		return [long, lat]
+	}
+}
 
 function addHome(map, home) {
 	// create an HTML element for the starting location
@@ -63,7 +77,6 @@ async function getFeatures(map, home, token) {
 
 
 async function addFeatures(map, feature, home, token) {
-	console.log(feature)
 	// get drive time
 	let params = {
   		alternatives: false,
