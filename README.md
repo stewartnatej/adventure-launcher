@@ -6,32 +6,30 @@
 - smoke forecast
 
 ## ⭕ prerequisites
-- you must have your own tokens on `openweather` and `mapbox gl js`
-
-## 🤔 desired end state
-- hike popups: drive time, 5-day outlook for weather and smoke
-- map display: change symbols based on drop-down of metrics
+- python web server (see `requirements.txt`)
+- your own tokens on `openweather` and `mapbox gl js`
+  - the tokens should be stored in `tokens.py` in the same directory as `main.py`:
+  ```python
+  tokens = {
+    "mapbox": "your_mapbox_token",
+    "openweather": "your_openweather_token"
+  }
+  ```
 
 ## ☑️ to do
-- break down weather and smoke forecasts
+- add legend and credits
 - add more hikes
+- host it
 
-### 🌦️ desired smoke/weather metrics
-- convert utc times to local day
-- calculate average aqi for the day
-- calculate high/low for the day
-- percent of day with possible rain?? doesn't capture intensity
-- [possible weather codes](https://openweathermap.org/weather-conditions)
-
-## 🤗 nice to have
-- enter launch pad coordinates from within map
-- if a metric is not being used for display, don't fetch it until its popup is activated
-- host somewhere to make accessible to the global web
+## 🤗 would be nice
+- upload your own `geojson` of destinations
 
 ## 🤖 tech stack
-- [mapbox](https://www.mapbox.com/)
-- [openweather api](https://openweathermap.org)
-- [FastAPI](https://fastapi.tiangolo.com/) 
+- [NOAA API](https://www.weather.gov/documentation/services-web-api) for weather
+- [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/) for map functionality
+- [Mapbox Directions API](https://docs.mapbox.com/mapbox-gl-js/api/) for drive times
+- [OpenWeather API](https://openweathermap.org/api/air-pollution) for air quality
+- [FastAPI](https://fastapi.tiangolo.com/) to serve it
 
 ## ▶ run it
 - run `server.py`

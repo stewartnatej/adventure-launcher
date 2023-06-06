@@ -47,7 +47,10 @@ async def mapbox_token():
 
 @app.get('/pollution')
 async def pollution(lat, long):
-    """get pollution (hourly for 5 days)"""
+    """
+    the received pollution forecast is hourly for 4 days.
+    this function outputs the aqi in 12 hour intervals
+    """
     url = 'https://api.openweathermap.org/data/2.5/air_pollution/forecast'
     params = {
         'lat': lat,
@@ -57,4 +60,11 @@ async def pollution(lat, long):
     pollution_url = f'{url}?{urlencode(params)}'
     async with session.get(pollution_url) as response:
         response_json = await response.json()
-        return response_json['list']
+
+    # sample the AQI every 12 hours
+    pollution_subset = [
+        v['main']['aqi']
+        for i, v in enumerate(response_json['list'])
+        if (i+1) % 12 == 0
+    ]
+    return pollution_subset

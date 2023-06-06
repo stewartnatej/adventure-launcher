@@ -70,12 +70,10 @@ async function addFeatures(map, feature, home, token) {
 
 	// create a marker element for each feature
 	let marker = document.createElement("div")
-	marker.id = feature.properties.title  // groupTimes(driveTime)
+	marker.id = feature.properties.title
 
 	// populate the popup content
-	let html = `<h3>${feature.properties.title}</h3>
-		Drive time: ${driveTime} hours
-		<br>${feature.properties.miles} mile hike`
+	let html = `<h3>${feature.properties.title}</h3>Drive time: ${driveTime} hours`
 
 	// add the marker/popup to the map
 	let popup = new mapboxgl.Popup({ offset: 25 }).setHTML(html)
@@ -84,22 +82,20 @@ async function addFeatures(map, feature, home, token) {
 		.setPopup(popup)
 		.addTo(map)
 
-	formatMarker(weather, pollution, feature.properties.title)
+	formatMarker(driveTime, weather, pollution, feature.properties.title)
 }
 
 
-function formatMarker(weather, pollution, id) {
-	let cells = 16
-	let colors = ['red', 'green', 'blue', 'yellow']
-
+function formatMarker(driveTime, weather, pollution, id) {
 	// get the marker element
 	let gridContainer = document.getElementById(id)
 
-	// generate the grid
+	// generate the weather grid
 	for (let i = 0; i < 8; i++) {
 		const gridCell = document.createElement('div')
 		gridCell.className = 'tooltip'
-		gridCell.style.backgroundColor = colors[(i) % colors.length]
+		gridCell.style.backgroundImage = `url(${weather[i].icon})`
+		gridCell.style.backgroundSize = 'cover'
 		gridContainer.appendChild(gridCell)
 
 		// create the tooltip text element
@@ -111,16 +107,17 @@ function formatMarker(weather, pollution, id) {
 		gridContainer.appendChild(gridCell)  // append grid cell to the container
 	}
 
+	// generate the pollution grid
 	for (let i = 0; i < 8; i++) {
 		const gridCell = document.createElement('div')
 		gridCell.className = 'tooltip'
-		gridCell.style.backgroundColor = colors[(i + 1) % colors.length]
+		gridCell.style.backgroundColor = colorPollution(pollution[i])
 		gridContainer.appendChild(gridCell)
 
 		// create the tooltip text element
 		const tooltipText = document.createElement('span');
 		tooltipText.className = 'tooltiptext'
-		tooltipText.innerText = 'pollution ...'
+		tooltipText.innerText = `AQI: ${pollution[i]}`
 
 		gridCell.appendChild(tooltipText)  // append tooltip text to the grid cell
 		gridContainer.appendChild(gridCell)  // append grid cell to the container
@@ -133,7 +130,7 @@ function formatMarker(weather, pollution, id) {
 	gridContainer.style.width = '100px'
 	gridContainer.style.height = '25px'
 	gridContainer.style.cursor = 'pointer'
-	gridContainer.style.border = '2px solid black'
+	gridContainer.style.border = `3px solid ${colorTimes(driveTime)}`
 }
 
 
@@ -170,23 +167,32 @@ async function getWeather(loc) {
 	// get rid of days and properties we don't need
 	let nearFuture = weatherData.properties.periods.slice(0, 8)
 	return nearFuture.map(  // un-nest and rename chance of precipitation
-		({detailedForecast, name, probabilityOfPrecipitation: {value: percentPrecip}, temperature}
-		) => ({detailedForecast, name, percentPrecip, temperature})
+		({detailedForecast, icon, name, probabilityOfPrecipitation: {value: percentPrecip}, temperature}
+		) => ({detailedForecast, icon, name, percentPrecip, temperature})
 	)
 }
 
 async function getPollution(dest) {
 	let pollutionResponse = await fetch(`/pollution?lat=${dest[1]}&long=${dest[0]}`)
-	return await pollutionResponse.json()
+	let pollutionData = await pollutionResponse.json()
+	return pollutionData
 }
 
 
-function groupTimes(time) {
-	if (time < 2) return 'close'
-	else if (time < 5) return 'medium'
-	else return 'far'
+function colorTimes(time) {
+	if (time < 2) return 'black'
+	if (time < 5) return 'orange'
+	else return 'red'
 }
 
+
+function colorPollution(aqi) {
+	if (aqi === 1) return 'WhiteSmoke'
+	if (aqi === 2) return 'Gainsboro'
+	if (aqi === 3) return 'DarkGray'
+	if (aqi === 4) return 'DimGray'
+	if (aqi === 5) return 'Black'
+}
 
 //get the party started!
 party()
