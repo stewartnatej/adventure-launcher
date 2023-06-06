@@ -24,7 +24,8 @@ function getHome() {
 	let long = queryParams.get("long") ?? 0
 	let lat = queryParams.get("lat") ?? 0
 	if (long === 0 || lat === 0) {
-		// default if the url doesn't contain lat and long (but they could still be incorrect)
+		// default if the url doesn't contain lat and long.
+		// they could still be incorrect (e.g., strings), but we won't bother with that
 		return [-118.343, 46.0645]
 	} else {
 		return [long, lat]
@@ -49,20 +50,20 @@ async function getFeatures(map, home, token) {
 	let response = await fetch('/static/hiking.geojson')
 	let data = await response.json()
 	for (let feature of data.features) {
-		// invoke addFeatures and, without waiting for it to finish, process the next feature
+		// invoke addFeatures and, without waiting for it to finish, process the next feature.
 		// since there is no downstream processing, we don't need to ensure all invocations complete
 		addFeatures(map, feature, home, token)
 	}
 }
 
 
-async function addFeatures(map, feature, home, token) {
+async function addFeatures(map, feature, home, token) {  // adds hiking destination to the map
 	let dest = feature.geometry.coordinates
 
 	// asynchronously get drive time, weather, and pollution
 	let [driveTime, weather, pollution] = await Promise.all(
 		[
-			getDrive(home, dest, token),
+			getDriveHours(home, dest, token),
 			getWeather(dest),
 			getPollution(dest)
 		]
@@ -86,7 +87,7 @@ async function addFeatures(map, feature, home, token) {
 }
 
 
-function formatMarker(driveTime, weather, pollution, id) {
+function formatMarker(driveTime, weather, pollution, id) {  // styles a grid with all desired info
 	// get the marker element
 	let gridContainer = document.getElementById(id)
 
@@ -134,7 +135,7 @@ function formatMarker(driveTime, weather, pollution, id) {
 }
 
 
-async function getDrive(home, dest, token) {
+async function getDriveHours(home, dest, token) {
 	let params = {
 		alternatives: false,
 		geometries: 'geojson',
@@ -169,13 +170,15 @@ async function getWeather(loc) {
 	return nearFuture.map(  // un-nest and rename chance of precipitation
 		({detailedForecast, icon, name, probabilityOfPrecipitation: {value: percentPrecip}, temperature}
 		) => ({detailedForecast, icon, name, percentPrecip, temperature})
-	)
+	)  // list of objects containing weather info
 }
 
+
 async function getPollution(dest) {
+	// query the server, to avoid exposing token to client
 	let pollutionResponse = await fetch(`/pollution?lat=${dest[1]}&long=${dest[0]}`)
 	let pollutionData = await pollutionResponse.json()
-	return pollutionData
+	return pollutionData  // list of air quality indexes
 }
 
 

@@ -1,5 +1,5 @@
 # 🏔️ where to go
-🗺️ map of hiking destinations with info to help choose your destination
+🗺️ map of hiking spots, with info to help choose your destination:
 - hike distance
 - drive time
 - weather forecast
@@ -25,11 +25,11 @@
 - upload your own `geojson` of destinations
 
 ## 🤖 tech stack
-- [NOAA API](https://www.weather.gov/documentation/services-web-api) for weather
-- [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/) for map functionality
-- [Mapbox Directions API](https://docs.mapbox.com/mapbox-gl-js/api/) for drive times
-- [OpenWeather API](https://openweathermap.org/api/air-pollution) for air quality
-- [FastAPI](https://fastapi.tiangolo.com/) to serve it
+- [NOAA API](https://www.weather.gov/documentation/services-web-api) - weather
+- [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/) - map functionality
+- [Mapbox Directions API](https://docs.mapbox.com/mapbox-gl-js/api/) - drive times
+- [OpenWeather API](https://openweathermap.org/api/air-pollution) - air quality
+- [FastAPI](https://fastapi.tiangolo.com/) - to serve it
 
 ## ▶ run it
 - run `server.py`

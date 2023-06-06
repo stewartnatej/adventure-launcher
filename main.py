@@ -42,6 +42,10 @@ async def home(request: Request):
 
 @app.get('/mapbox_token')
 async def mapbox_token():
+    """
+    although there is no way to avoid exposing the mapbox token to the client,
+    we are returning it from the server. this enables storing the tokens in one place
+    """
     return tokens['mapbox']
 
 
