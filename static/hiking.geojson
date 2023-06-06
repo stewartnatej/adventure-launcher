@@ -32,6 +32,72 @@
 				"coordinates": [-118.7283, 42.6563],
 				"type": "Point"
 			}
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"title": "Ice Lake",
+				"miles": 14
+			},
+			"geometry": {
+				"coordinates": [-117.2126, 45.2679],
+				"type": "Point"
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"title": "Three Sisters",
+				"miles": 48
+			},
+			"geometry": {
+				"coordinates": [-121.7372, 44.03],
+				"type": "Point"
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"title": "Blue Glacier",
+				"miles": 37
+			},
+			"geometry": {
+				"coordinates": [-123.9344, 47.8595],
+				"type": "Point"
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"title": "Abercrombie Peak",
+				"miles": 7
+			},
+			"geometry": {
+				"coordinates": [-117.5208, 48.9060],
+				"type": "Point"
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"title": "Wonderland Trail",
+				"miles": 90
+			},
+			"geometry": {
+				"coordinates": [-121.6423, 46.9146],
+				"type": "Point"
+			}
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"title": "Heliotrope Ridge",
+				"miles": 7
+			},
+			"geometry": {
+				"coordinates": [-121.8957, 48.8021],
+				"type": "Point"
+			}
 		}
 	],
 	"type": "FeatureCollection"

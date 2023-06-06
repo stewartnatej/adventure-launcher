@@ -112,7 +112,7 @@ function formatMarker(driveTime, weather, pollution, id) {  // styles a grid wit
 	for (let i = 0; i < 8; i++) {
 		const gridCell = document.createElement('div')
 		gridCell.className = 'tooltip'
-		gridCell.style.backgroundColor = colorPollution(pollution[i])
+		gridCell.style.backgroundColor = pollutionToColor(pollution[i])
 		gridContainer.appendChild(gridCell)
 
 		// create the tooltip text element
@@ -131,7 +131,7 @@ function formatMarker(driveTime, weather, pollution, id) {  // styles a grid wit
 	gridContainer.style.width = '100px'
 	gridContainer.style.height = '25px'
 	gridContainer.style.cursor = 'pointer'
-	gridContainer.style.border = `3px solid ${colorTimes(driveTime)}`
+	gridContainer.style.border = `3px solid ${timeToColor(driveTime)}`
 }
 
 
@@ -177,24 +177,26 @@ async function getWeather(loc) {
 async function getPollution(dest) {
 	// query the server, to avoid exposing token to client
 	let pollutionResponse = await fetch(`/pollution?lat=${dest[1]}&long=${dest[0]}`)
-	let pollutionData = await pollutionResponse.json()
-	return pollutionData  // list of air quality indexes
+	return await pollutionResponse.json()  // list of air quality indexes
 }
 
 
-function colorTimes(time) {
-	if (time < 2) return 'black'
-	if (time < 5) return 'orange'
-	else return 'red'
+function timeToColor(time) {
+	if (time < 2) return '#2980B9'
+	if (time < 4) return '#8E44AD'
+	if (time < 6) return '#EB984E'
+	return '#E74C3C'
 }
 
 
-function colorPollution(aqi) {
-	if (aqi === 1) return 'WhiteSmoke'
-	if (aqi === 2) return 'Gainsboro'
-	if (aqi === 3) return 'DarkGray'
-	if (aqi === 4) return 'DimGray'
-	if (aqi === 5) return 'Black'
+function pollutionToColor(aqi) {
+	return {
+		1: '#F8F9F9',
+		2: '#E5E7E9',
+		3: '#AAB7B8',
+		4: '#616A6B',
+		5: '#424949'
+	}[aqi]
 }
 
 //get the party started!
