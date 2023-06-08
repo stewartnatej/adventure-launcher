@@ -1,3 +1,4 @@
+from os import environ
 from urllib.parse import urlencode
 from contextlib import asynccontextmanager
 from aiohttp import ClientSession
@@ -6,7 +7,12 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
-from tokens import tokens
+
+try:
+    from tokens import mapbox_token, openweather_token
+except ImportError:
+    mapbox_token = environ['MAPBOX_TOKEN']
+    openweather_token = environ['OPENWEATHER_TOKEN']
 
 # create the session globally so all functions have access to it.
 # the same session can be used for multiple target servers. this is way faster than a session per request
@@ -41,12 +47,12 @@ async def home(request: Request):
 
 
 @app.get('/mapbox_token')
-async def mapbox_token():
+async def get_mapbox_token():
     """
     although there is no way to avoid exposing the mapbox token to the client,
     we are returning it from the server. this enables storing the tokens in one place
     """
-    return tokens['mapbox']
+    return mapbox_token
 
 
 @app.get('/pollution')
@@ -59,13 +65,13 @@ async def pollution(lat, long):
     params = {
         'lat': lat,
         'lon': long,
-        'appid': tokens["openweather"]
+        'appid': openweather_token
     }
     pollution_url = f'{url}?{urlencode(params)}'
     async with session.get(pollution_url) as response:
         response_json = await response.json()
 
-    # sample the AQI every 12 hours
+    # read the AQI forecast in 12 hour intervals
     pollution_subset = [
         v['main']['aqi']
         for i, v in enumerate(response_json['list'])
